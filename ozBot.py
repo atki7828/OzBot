@@ -75,10 +75,10 @@ def is_image(url):
 
 # scrape subreddit for image files from past 24 hours, 
 # return random
-def rand_img(sr):
+def rand_img(sr,t='day'):
     limit = 100
     count = 0
-    url = 'http://www.reddit.com/r/{subreddit}/top.json?t=day&limit=100'.format(subreddit=sr);
+    url = 'http://www.reddit.com/r/{subreddit}/top.json?t={timeRange}&limit=100'.format(subreddit=sr,timeRange=t);
     print('url: ' + url)
     r = requests.get(url,headers={'User-Agent':'bot 0.1'})
     rand = random.randint(0,r.json()['data']['dist']-1)
@@ -244,6 +244,16 @@ async def cat(ctx):
         return
     print(f)
     await ctx.send('cat.')
+    await ctx.send(file=discord.File(f))
+
+@bot.command(name='CAT')
+async def bigcat(ctx):
+    f = download_file(rand_img('bigcats','month'),'bigcats')
+    if(f == 'NONE'):
+        await ctx.send('no images found....')
+        return
+    print(f)
+    await ctx.send('CAT.')
     await ctx.send(file=discord.File(f))
 
 @bot.command(name='steam')
